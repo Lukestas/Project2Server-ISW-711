@@ -1,0 +1,149 @@
+import Playlist from '../models/PlayListModel.js'
+import Video from '../models/VideoModel.js';
+import Child from '../models/ChildModel.js';
+import Parent from '../models/ParentModel.js'
+
+export const createPlaylist = async (req, res) => {
+    try {
+        const { name } = req.body;
+        const parentFound= await Parent.findById(req.parent.id);
+        if (!name) {
+            return res.status(400).json(["Se requiere un nombre para la playlist"]);
+        }
+        const newPlaylist = new Playlist({
+            name,
+            parent:parentFound.id
+        })
+        const playlistSaved = await newPlaylist.save();
+        parentFound.playlists.push(playlistSaved._id)
+        await parentFound.save()
+        res.status(201).json(playlistSaved)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error al crear la playlist', error });
+    }
+}
+
+export const assignPlaylistToChild = async (req, res) => {
+    try {
+        const childFound=await Child.findById(req.body.childId)
+        
+        const playlistFound=await Playlist.findById(req.body.playlistId)
+        if(!childFound){
+            return res.status(400).json(["Se requiere un niño para asignar la playlist"]);
+        }
+        if(!playlistFound){
+            return res.status(400).json(["Se requiere una playlist para asignar"]);
+        }
+        childFound.playlists.push(playlistFound._id)
+        await childFound.save();
+        res.status(200).json({ message: "La playlist se asigno correctametne"});
+    } catch (error) {
+        res.status(500).json({ message: "Error al asignar la playlist", error: error.message });
+    }
+}
+
+export const getAllPlaylist = async (req, res) => {
+    try {
+        const PlaylistsFound = await Playlist.find().populate("videos");
+        if (!PlaylistsFound) {
+            return res.status(404).json(["No se encontraron Playlist"]);
+        }
+        res.json(PlaylistsFound);
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'Error al obtener las playlists', error });
+    }
+}
+
+export const getOnePlaylist = async (req, res) => {
+    try {
+        const playlistFound = await Playlist.findById(req.query.id).populate("videos");
+        if (!playlistFound) {
+            return res.status(404).json(["No se encontro la Playlist"]);
+        }
+        res.json(playlistFound);
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'Error al obtener las playlist', error });
+    }
+}
+
+export const deletePlaylist = async (req, res) => {
+    try {
+        const playlistFound = await Playlist.findByIdAndDelete(req.body.playlistID);
+        if (!playlistFound) {
+            return res.status(404).json(["No se encontro la Playlist"]);
+        }
+        res.json({ message: "Playlist eliminada correctamente" });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'Error al obtener las playlist', error });
+    }
+}
+
+
+export const addVideoToPlaylist = async (req, res) => {
+    try {
+        console.log(req.body.videoId)
+        const videoFound = await Video.findById(req.body.videoId)
+        console.log(videoFound)
+        const playlistFound = await Playlist.findById(req.query.id);
+        if (!playlistFound) {
+            return res.status(404).json(["No hay playlist al cual agregar este video"]);
+        }
+        if (!videoFound) {
+            return res.status(404).json({ message: "No se encontró el video" });
+        }
+        if (playlistFound.videos.includes(videoFound.id)) {
+            return res.status(400).json({ message: "El video ya está en la playlist" });
+        }
+
+        playlistFound.videos.push(videoFound.id);
+        const playlistSaved = await playlistFound.save();
+        res.status(200).json({ message: "Video agregado a la playlist", playlistSaved });
+    } catch (error) {
+        res.status(500).json({ message: "Error al agregar el video", error: error.message });
+    }
+}
+
+export const removeVideoFromPlaylist = async (req, res) => {
+    try {
+        const videoFound = await Video.findById(req.body.videoId)
+        const playlistFound = await Playlist.findById(req.query.id)
+        if (!videoFound) {
+            return res.status(404).json({ message: "No se encontró el video" });
+        }
+        if (!playlistFound) {
+            return res.status(404).json({ message: "No se encontró la playlist" });
+        }
+        if (!playlistFound.videos.includes(videoFound.id)) {
+            return res.status(400).json({ message: "El video no está en la playlist" });
+        }
+
+        playlistFound.videos = playlistFound.videos.filter(video => video.toString() !== videoFound.id);
+
+        const playlistSaved = await playlistFound.save();
+        res.status(200).json({ message: "Video eliminado de la playlist", playlistSaved });
+    } catch (error) {
+        res.status(500).json({ message: "Error al eliminar el video", error });
+    }
+}
+
+export const updatePlaylist = async (req, res) => {
+    try {
+
+        const name = req.body.name
+        console.log(name)
+        const playlistFound = await Playlist.findById(req.query.id)
+        console.log(playlistFound)
+        if (!playlistFound) {
+            return res.status(404).json({ message: "No se encontró la playlist" });
+        }
+        playlistFound.name = name;
+        const playlistSaved = await playlistFound.save();
+        res.status(200).json({ message: "playlist actualizada", playlistSaved });
+    } catch (error) {
+        res.status(500).json({ message: "Error al eliminar el playlist", error });
+    }
+}
