@@ -7,7 +7,7 @@ const mailerSend = new MailerSend({
     apiKey: process.env.MAILERSEND_API_KEY,
 });
 
-const sentFrom = new Sender("MS_366hvo@test-r9084zvve9jgw63d.mlsender.net", "KidsTube");
+const sentFrom = new Sender(process.env.MAILERSEND_SENDER_EMAIL, process.env.MAILERSEND_SENDER_NAME);
 
 export const sendVerificationEmail = async ({ email, firstName, verificationToken }) => {
     const verificationUrl = `http://localhost:3001/api/auth/verify-email?token=${verificationToken}`;
