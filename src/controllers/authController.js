@@ -4,13 +4,17 @@ import { createAccessToken } from '../libs/jwt.js';
 import moment from 'moment';
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
+<<<<<<< HEAD
 import { generateVerificationToken } from '../middlewares/tokenUtils.js';
 import { sendVerificationEmail } from '../mailersend/mailersend.js';
+=======
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
 
 dotenv.config();
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
+<<<<<<< HEAD
 
 //This function is used to register a new parent in the database
 export const registerParent = async (req, res) => {
@@ -19,10 +23,19 @@ export const registerParent = async (req, res) => {
 
     try {
         //check if all fields are filled
+=======
+export const registerParent = async (req, res) => {
+
+    const { email, password, repeatPassword, phone, pin, firstName, lastName, country, birthDate } = req.body;
+
+    try {
+
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
         if (!email || !password || !repeatPassword || !phone || !pin || !firstName || !lastName || !birthDate) {
             return res.status(400).json(["Todos los campos son obligatorios"]);
         }
 
+<<<<<<< HEAD
         //check if the phone number is valid
         const phoneRegex = /^\+506\d{8}$/; // Assuming a 8-digit phone number
         if (!phoneRegex.test(phone)) {
@@ -30,33 +43,48 @@ export const registerParent = async (req, res) => {
         }
 
         //check if the email is valid
+=======
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json(["Correo electrónico inválido"]);
         }
 
+<<<<<<< HEAD
         //check if password and repeatPassword are the same
+=======
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
         if (password !== repeatPassword) {
             return res.status(400).json(["Las contraseñas no coinciden"])
         }
 
+<<<<<<< HEAD
         //check if password is empty or less than 6 characters
+=======
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
         if (pin.length !== 6 || isNaN(pin)) {
             return res.status(400).json(["El pin debe ser exactamente de 6 digitos numericos"])
         }
 
+<<<<<<< HEAD
         //check if email already exists in the database
+=======
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
         const emailExist = await Parent.findOne({ email })
         if (emailExist) {
             return res.status(400).json(["El correo electronico ingresado ya se encuentra registrado"])
         }
 
+<<<<<<< HEAD
         //check if age is less than 18 years old
+=======
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
         const age = moment().diff(moment(birthDate, "DD-MM-YYYY"), "years");
         if (age <= 18) {
             return res.status(400).json(["Debe ser mayor de edad para registrarse"])
         }
 
+<<<<<<< HEAD
         //hash the password
         const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -64,6 +92,10 @@ export const registerParent = async (req, res) => {
             generateVerificationToken();
 
         //create a new parent using the Parent model
+=======
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
         const newParent = new Parent({
             email,
             password: hashedPassword,
@@ -72,6 +104,7 @@ export const registerParent = async (req, res) => {
             firstName,
             lastName,
             country,
+<<<<<<< HEAD
             birthDate,
             isVerified: false,
             verificationToken,
@@ -95,11 +128,27 @@ export const registerParent = async (req, res) => {
         
     } catch (error) {
         //send an error message if something goes wrong
+=======
+            birthDate
+        });
+
+        const savedParent = await newParent.save()
+
+        const token = await createAccessToken({ id: savedParent._id })
+        res.status(200);
+        res.cookie("token", token);
+        res.header({
+            'location': `/api/auth/parent?id=${savedParent._id}`
+        });
+        res.json(savedParent)
+    } catch (error) {
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
         console.error(error);
         res.status(500).json(["Error interno del servidor"]);
     }
 }
 
+<<<<<<< HEAD
 export const verifyEmail = async (req, res) => {
     console.log("Solicitud de verificación recibida. Query params:", req.query);
     const { token } = req.query;
@@ -134,6 +183,8 @@ export const verifyEmail = async (req, res) => {
     }
 }
 
+=======
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
 export const login = async (req, res) => {
 
     const { email, password } = req.body;

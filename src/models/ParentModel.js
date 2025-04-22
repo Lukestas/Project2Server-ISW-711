@@ -16,6 +16,7 @@ const parentsSchema = new mongoose.Schema({
     playlists: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "playlists"
+<<<<<<< HEAD
     }],
     isVerified: {
         type: Boolean,
@@ -23,6 +24,9 @@ const parentsSchema = new mongoose.Schema({
     },
     verificationToken: { type: String },
     verificationTokenExpires: { type: Date },
+=======
+    }]
+>>>>>>> 8911a2e785612adfaafb0040ed35b36515edbdf8
 }, { timestamps: true });
 
 export default mongoose.model('parents', parentsSchema);
