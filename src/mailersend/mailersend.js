@@ -1,0 +1,48 @@
+import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const mailerSend = new MailerSend({
+    apiKey: process.env.MAILERSEND_API_KEY,
+});
+
+const sentFrom = new Sender("MS_366hvo@test-r9084zvve9jgw63d.mlsender.net", "KidsTube");
+
+export const sendVerificationEmail = async ({ email, firstName, verificationToken }) => {
+    const verificationUrl = `http://localhost:3001/api/auth/verify-email?token=${verificationToken}`;
+
+    const recipients = [new Recipient(email, firstName)];
+
+    try {
+        const emailParams = new EmailParams()
+            .setFrom(sentFrom)
+            .setTo(recipients)
+            .setSubject("Verifica tu cuenta de KidsTube")
+            .setHtml(`
+            <h1>Bienvenido ${firstName || "Usuario"} a KidsTube</h1>
+            <p>Por favor verifica tu email haciendo clic aquí:</p>
+            <a href="${verificationUrl}">Verificar ahora</a>
+            <p>Enlace válido por 24 horas</p>
+          `)
+            .setText(
+                `Verifica tu cuenta: ${verificationUrl}`
+            );
+
+        const response = await mailerSend.email.send(emailParams);
+        console.log("[DEBUG] Email enviado con éxito");
+        return response;
+
+    } catch (error) {
+        // Captura detallada de errores
+        console.error("[ERROR] Detalles completos:", {
+            message: error.message,
+            code: error.code,
+            response: error.response?.data,
+            stack: error.stack
+        });
+
+        throw new Error("Error al enviar el email. Por favor intente más tarde.");
+    }
+};
+
