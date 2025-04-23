@@ -7,24 +7,26 @@ export const graphQLschema = buildSchema(
         playLists: [Playlist]
         parentList: [Parent]
         childrenList: [Child]
+        getParentById(id: ID!): Parent
+        getChildById(id: ID!): Child
     }
 
     type Video{
-        _id: ID
-        name: String!
-        URL: String!
-        description: String!
+        _id: ID!
+        name: String
+        URL: String
+        description: String
     }
 
     type Playlist{
-        _id: ID
-        name: String!
+        _id: ID!
+        name: String
         videos:[Video]
     }
 
     type Parent{
-        _id: ID
-        email: String!
+        _id: ID!
+        email: String
         firstName: String
         lastName: String
         country: String
@@ -36,7 +38,7 @@ export const graphQLschema = buildSchema(
     }
     
     type Child{
-        _id: ID
+        _id: ID!
         name: String
         pin: String
         avatar: String

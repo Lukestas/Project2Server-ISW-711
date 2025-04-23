@@ -1,13 +1,7 @@
 import Child from '../models/ChildModel.js'
 import Parent from '../models/ParentModel.js'
 
-
-/*
-registerChild es un metodo para ingresar un nuevo niño a la base de datos, 
-con los atributos name, avatar y pin provenientes del frontend para posterior guardarlo,
-el padre al encontrarse autenticado se guarda el identificador,
-por ultimo se actualiza la lista de hijos del padre y se guardan
- */
+// Function to register a child
 export const registerChild = async (req, res) => {
   try {
 
@@ -35,6 +29,8 @@ export const registerChild = async (req, res) => {
     res.status(500).json({ message: 'Error al agregar el niño', error });
   }
 }
+
+// Function to get all children of a parent
 export const getChildrensByParentId = async (req, res) => {
   try {
     const childrens = await Child.find({ parent: req.parent.id })
@@ -48,6 +44,7 @@ export const getChildrensByParentId = async (req, res) => {
   }
 }
 
+//Function to delete a child
 export const deleteChild = async (req, res) => {
   try {
     const childtoDelete = await Child.findByIdAndDelete(req.query.id);
@@ -61,6 +58,7 @@ export const deleteChild = async (req, res) => {
   }
 }
 
+//Function to get a child by id
 export const getChildById = async (req, res) => {
   try {
     const childFound = await Child.findById(req.query.id);
@@ -74,6 +72,7 @@ export const getChildById = async (req, res) => {
   }
 }
 
+//Function to update a child
 export const updateChild = async (req, res) => {
   const { name, pin, avatar } = req.body
   try {

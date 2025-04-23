@@ -10,7 +10,7 @@ const mailerSend = new MailerSend({
 const sentFrom = new Sender(process.env.MAILERSEND_SENDER_EMAIL, process.env.MAILERSEND_SENDER_NAME);
 
 export const sendVerificationEmail = async ({ email, firstName, verificationToken }) => {
-    const verificationUrl = `http://localhost:3001/api/auth/verify-email?token=${verificationToken}`;
+    const verificationUrl = `http://localhost:5173/verify-email?token=${verificationToken}`;
 
     const recipients = [new Recipient(email, firstName)];
 

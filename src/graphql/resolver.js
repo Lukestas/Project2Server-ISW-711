@@ -31,5 +31,25 @@ export const graphqlResolvers = {
             .populate("parent")
             .populate("playlists");
         return childrenList
+    },
+    getParentById: async ({ id }) => {
+        const parent = await Parent.findById(id)
+            .populate({
+                path: "children",
+                populate: {
+                    path: "playlists",
+                    populate: {
+                        path: "videos"
+                    }
+                }
+            })
+            .populate("playlists")
+        return parent
+    },
+    getChildById: async ({ id }) => {
+        const child = await Child.findById(id)
+            .populate("parent")
+            .populate("playlists")
+        return child
     }
 }
