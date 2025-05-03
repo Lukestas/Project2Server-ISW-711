@@ -28,7 +28,7 @@ export const sendVerificationEmail = async ({ email, firstName, verificationToke
             .setText(
                 `Verifica tu cuenta: ${verificationUrl}`
             );
-
+        console.log("[DEBUG] Parámetros del email:", emailParams);
         const response = await mailerSend.email.send(emailParams);
         console.log("[DEBUG] Email enviado con éxito");
         return response;
@@ -39,7 +39,8 @@ export const sendVerificationEmail = async ({ email, firstName, verificationToke
             message: error.message,
             code: error.code,
             response: error.response?.data,
-            stack: error.stack
+            stack: error.stack,
+            
         });
 
         throw new Error("Error al enviar el email. Por favor intente más tarde.");

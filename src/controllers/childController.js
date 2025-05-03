@@ -11,6 +11,10 @@ export const registerChild = async (req, res) => {
       return res.status(400).json(["Todos los campos son obligatorios"]);
     }
 
+    if (pin.length !== 6 || isNaN(pin)) {
+      return res.status(400).json(["El pin debe ser exactamente de 6 digitos numericos"])
+  }
+
     const newChild = new Child({
       name,
       avatar,
