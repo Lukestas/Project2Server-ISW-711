@@ -99,23 +99,6 @@ export const registerParent = async (req, res) => {
     }
 }
 
-export const verifyParentPin= async (req, res) => {
-    try {
-        const { pin } = req.body;
-        const parent = await Parent.findById(req.parent.id);
-        if (!parent) {
-            return res.status(404).json(["Padre no encontrado"]);
-        }
-        if (parent.pin !== pin) {
-            return res.status(400).json(["PIN incorrecto"]);
-        }
-        res.status(200).json(true);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json(["Error interno del servidor"]);
-    }
-}
-
 
 //This function is used to verify the email of a parent
 export const verifyEmail = async (req, res) => {
