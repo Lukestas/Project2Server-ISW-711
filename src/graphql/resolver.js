@@ -5,13 +5,23 @@ import Child from "../models/ChildModel.js"
 
 export const graphqlResolvers = {
     videoList: async () => {
-        const videosList = await Video.find()
+        const videosList = await Video.find().populate("parent")
+        console.log(videosList)
         return videosList
     },
+
+    getVideoById: async({youtubeid})=>{
+        const video= await Video.findOne({youtubeid})
+        return video;
+    },
+
+
     playLists: async () => {
         const list = await PlayList.find().populate("videos")
         return list;
     },
+
+
     parentList: async () => {
         const parentList = await Parent.find()
             .populate({
@@ -26,12 +36,7 @@ export const graphqlResolvers = {
             .populate("playlists")
         return parentList;
     },
-    childrenList: async () => {
-        const childrenList = await Child.find()
-            .populate("parent")
-            .populate("playlists");
-        return childrenList
-    },
+
     getParentById: async ({ id }) => {
         const parent = await Parent.findById(id)
             .populate({
@@ -39,17 +44,37 @@ export const graphqlResolvers = {
                 populate: {
                     path: "playlists",
                     populate: {
-                        path: "videos"
+                        path: "videos",
+                        match: { status: { $ne: "disable" } }
                     }
                 }
             })
             .populate("playlists")
+            .populate({
+                path: "videos",
+                match: { status: { $ne: "disable" } },
+            })
         return parent
     },
+
+
+    childrenList: async () => {
+        const childrenList = await Child.find()
+            .populate("parent")
+            .populate("playlists");
+        return childrenList
+    },
+    
     getChildById: async ({ id }) => {
         const child = await Child.findById(id)
             .populate("parent")
-            .populate("playlists")
+            .populate({
+                path: "playlists",
+                populate: {
+                    path: "videos", 
+                    match: { status: { $ne: "disable" } },
+                },
+            });
         return child
     }
 }

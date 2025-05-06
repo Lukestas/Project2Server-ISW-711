@@ -1,9 +1,10 @@
 import Video from "../models/VideoModel.js";
+import Parent from "../models/ParentModel.js"
 
 export const registerVideo = async (req, res) => {
     try {
         const { youtubeid, title, description, thumbnail, status } = req.body;
-        console.log(req.body)
+        const parentFound = await Parent.findById(req.parent.id)
         if (!youtubeid || !title || !description || !thumbnail) {
             return res.status(400).json(["Todos los campos son obligatorios"]);
         }
@@ -23,6 +24,8 @@ export const registerVideo = async (req, res) => {
             parent: req.parent.id
         })
         const VideoSaved = await NewVideo.save()
+        parentFound.videos.push(VideoSaved._id);
+        await parentFound.save();
         res.status(201).json({ message: 'video agregado correctamente', video: VideoSaved });
     } catch (error) {
         console.error("Error al agregar o reactivar el video:", error);
@@ -46,7 +49,7 @@ export const getOneVideo = async (req, res) => {
     try {
         console.log(req.query)
         const { youtubeid } = req.query;
-        const videoFound = await Video.findOne({youtubeid})
+        const videoFound = await Video.findOne({ youtubeid })
         if (!videoFound) {
             return res.status(400).json(["Ningun video encontrado"])
         }
@@ -60,7 +63,7 @@ export const getOneVideo = async (req, res) => {
 export const disableVideo = async (req, res) => {
     try {
         const { youtubeid } = req.body;
-        const videoFound = await Video.findOne({youtubeid})
+        const videoFound = await Video.findOne({ youtubeid })
         if (!videoFound) {
             return res.status(400).json(["Ningun video encontrado"])
         }
@@ -77,20 +80,18 @@ export const disableVideo = async (req, res) => {
 
 export const updateVideo = async (req, res) => {
     try {
-        const { name, URL, description } = req.body;
+        const { youtubeid } = req.query
+        const { title, description } = req.body;
 
-        const videoFound = await Video.findById(req.query.id)
+        const videoFound = await Video.findOneAndUpdate({ youtubeid },
+            { title, description },
+            { new: true }
+        )
         if (!videoFound) {
             return res.status(400).json(["Ningun video encontrado"])
         }
 
-        videoFound.name = name || videoFound.name;
-        videoFound.URL = URL || videoFound.URL;
-        videoFound.description = description || videoFound.description;
-        videoFound.status = "enable"
-
-        const updatedVideo = await videoFound.save();
-        res.json({ message: "se actualizo el siguiente video", video: updatedVideo })
+        res.status(200).json({ message: "Video actualizado correctamente", video: videoFound });
 
     } catch (error) {
         console.log(error)

@@ -17,12 +17,20 @@ const parentsSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "playlists"
     }],
+    videos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "videos"
+    }],
     isVerified: {
         type: Boolean,
         default: false
     },
     verificationToken: { type: String },
     verificationTokenExpires: { type: Date },
+    isSMSVerified: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true });
 
 export default mongoose.model('parents', parentsSchema);

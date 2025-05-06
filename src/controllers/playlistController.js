@@ -85,8 +85,8 @@ export const deletePlaylist = async (req, res) => {
 
 export const addVideoToPlaylist = async (req, res) => {
     try {
-        console.log(req.body.videoId)
-        const videoFound = await Video.findById(req.body.videoId)
+        const {youtubeid}=req.body
+        const videoFound = await Video.findOne({youtubeid})
         console.log(videoFound)
         const playlistFound = await Playlist.findById(req.query.id);
         if (!playlistFound) {
@@ -132,11 +132,9 @@ export const removeVideoFromPlaylist = async (req, res) => {
 
 export const updatePlaylist = async (req, res) => {
     try {
-
+        console.log(req.query.id)
         const name = req.body.name
-        console.log(name)
         const playlistFound = await Playlist.findById(req.query.id)
-        console.log(playlistFound)
         if (!playlistFound) {
             return res.status(404).json({ message: "No se encontró la playlist" });
         }

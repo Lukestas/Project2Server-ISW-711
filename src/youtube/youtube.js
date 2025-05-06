@@ -8,7 +8,6 @@ const apiKey = process.env.YOUTUBE_API_KEY;
 export const youtubeSearch = async (req, res) => {
     try {
         const { search } = req.query;
-        console.log(search);
         
         if (!search) {
             return res.status(400).json(["Debe ingresar un término de búsqueda"]);
@@ -19,16 +18,14 @@ export const youtubeSearch = async (req, res) => {
                 q: search,
                 type: 'video',
                 key: apiKey,
-                maxResults: 3
+                maxResults: 5
             }
         });
-        console.log(YoutubeResquest.data.items.thumbnails);
-
         const videosFound = YoutubeResquest.data.items.map((video) => ({
             id: video.id.videoId,
             title: video.snippet.title,
             description: video.snippet.description,
-            thumbnail: video.snippet.thumbnails.default.url
+            thumbnail: video.snippet.thumbnails.high.url
         }));
 
         res.status(200).json(videosFound);

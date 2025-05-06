@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import { generateVerificationToken } from '../middlewares/tokenUtils.js';
 import { sendVerificationEmail } from '../mailersend/mailersend.js';
+import { Console } from 'console';
 
 dotenv.config();
 
@@ -168,7 +169,7 @@ export const login = async (req, res) => {
 
         const token = await createAccessToken({ id: parentFound._id })
         res.cookie("token", token)
-        res.json(`Bienvenido ${parentFound.firstName} ${parentFound.lastName}`)
+        res.json(parentFound)
     } catch (error) {
         res.status(500)
         res.json({
@@ -177,7 +178,10 @@ export const login = async (req, res) => {
     }
 }
 
-export const logout = (req, res) => {
+
+export const logout = async(req, res) => {
+    const {id}=req.body
+    await Parent.findByIdAndUpdate(id, { isSMSVerify: false });
     res.cookie("token", "", {
         expires: new Date(0)
     })
@@ -205,7 +209,7 @@ export const getParent = async (req, res) => {
     try {
         const parentFound = await Parent.findById(req.parent.id);
         if (!parentFound) return res.status(404).json(["Padre no encontrado"]);
-        res.json(parentFound);
+        return res.json(parentFound);
     } catch (error) {
         res.status(500).json(["back: Error al obtener los hijos"]);
     }

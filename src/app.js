@@ -27,7 +27,7 @@ app.use(cors({
 app.use('/graphql', graphqlHTTP({
   schema: graphQLschema,
   rootValue: graphqlResolvers,
-  graphiql: true
+  graphiql: true,
 }));
 
 
