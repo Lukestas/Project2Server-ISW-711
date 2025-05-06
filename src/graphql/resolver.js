@@ -3,6 +3,11 @@ import Video from "../models/VideoModel.js"
 import Parent from "../models/ParentModel.js"
 import Child from "../models/ChildModel.js"
 
+
+// Resolver functions for GraphQL queries and mutations
+// These functions interact with the database models to fetch or manipulate data
+// and return the results to the GraphQL server.
+// Each function corresponds to a specific GraphQL query or mutation defined in the schema
 export const graphqlResolvers = {
     videoList: async () => {
         const videosList = await Video.find().populate("parent")

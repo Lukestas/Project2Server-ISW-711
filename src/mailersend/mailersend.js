@@ -9,6 +9,9 @@ const mailerSend = new MailerSend({
 
 const sentFrom = new Sender(process.env.MAILERSEND_SENDER_EMAIL, process.env.MAILERSEND_SENDER_NAME);
 
+//Send a verification email to the user
+//The email will contain a link to verify the user's email address
+//Use the library mailersend to send the email
 export const sendVerificationEmail = async ({ email, firstName, verificationToken }) => {
     const verificationUrl = `http://localhost:5173/verify-email?token=${verificationToken}`;
 

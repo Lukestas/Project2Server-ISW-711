@@ -11,6 +11,8 @@ const serviceSid = process.env.TWILIO_SERVICE_SID;
 
 const client = twilio(apiKeySid, apiKeySecret, { accountSid });
 
+//Twilio SMS verification service
+//This Function sends a verification code to the user's phone number
 export const sendVerificationCode = async (req, res) => {
     const { phone } = req.body;
 
@@ -26,6 +28,8 @@ export const sendVerificationCode = async (req, res) => {
     }
 };
 
+//This Function verifies the code sent to the user's phone number
+//It checks if the code is correct and updates the user's verification status in the database
 export const verifyCode = async (req, res) => {
     const { phone, code } = req.body;
 

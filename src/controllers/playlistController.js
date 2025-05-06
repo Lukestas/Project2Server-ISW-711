@@ -3,6 +3,7 @@ import Video from '../models/VideoModel.js';
 import Child from '../models/ChildModel.js';
 import Parent from '../models/ParentModel.js'
 
+//This function is to create a playlist
 export const createPlaylist = async (req, res) => {
     try {
         const { name } = req.body;
@@ -23,7 +24,7 @@ export const createPlaylist = async (req, res) => {
         res.status(500).json({ message: 'Error al crear la playlist', error });
     }
 }
-
+//This function is to assign a playlist to a child
 export const assignPlaylistToChild = async (req, res) => {
     try {
         const childFound=await Child.findById(req.body.childId)
@@ -42,7 +43,7 @@ export const assignPlaylistToChild = async (req, res) => {
         res.status(500).json({ message: "Error al asignar la playlist", error: error.message });
     }
 }
-
+//This function is to get all the playlists
 export const getAllPlaylist = async (req, res) => {
     try {
         const PlaylistsFound = await Playlist.find().populate("videos");
@@ -55,7 +56,7 @@ export const getAllPlaylist = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener las playlists', error });
     }
 }
-
+//This function is to get one playlist with videos by id
 export const getOnePlaylist = async (req, res) => {
     try {
         const playlistFound = await Playlist.findById(req.query.id).populate("videos");
@@ -68,7 +69,7 @@ export const getOnePlaylist = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener las playlist', error });
     }
 }
-
+//This function is to delete a playlist by id
 export const deletePlaylist = async (req, res) => {
     try {
         const playlistFound = await Playlist.findByIdAndDelete(req.body.playlistID);
@@ -82,7 +83,7 @@ export const deletePlaylist = async (req, res) => {
     }
 }
 
-
+//This function is to add a video to a playlist by id
 export const addVideoToPlaylist = async (req, res) => {
     try {
         const {youtubeid}=req.body
@@ -107,6 +108,7 @@ export const addVideoToPlaylist = async (req, res) => {
     }
 }
 
+//This function is to remove a video from a playlist by id
 export const removeVideoFromPlaylist = async (req, res) => {
     try {
         const videoFound = await Video.findById(req.body.videoId)
@@ -130,6 +132,7 @@ export const removeVideoFromPlaylist = async (req, res) => {
     }
 }
 
+//This function is to update a playlist by id
 export const updatePlaylist = async (req, res) => {
     try {
         console.log(req.query.id)

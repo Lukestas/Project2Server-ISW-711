@@ -6,7 +6,6 @@ import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import { generateVerificationToken } from '../middlewares/tokenUtils.js';
 import { sendVerificationEmail } from '../mailersend/mailersend.js';
-import { Console } from 'console';
 
 dotenv.config();
 
@@ -83,6 +82,8 @@ export const registerParent = async (req, res) => {
 
         //save the new parent in the database
         const savedParent = await newParent.save()
+
+        //send the verification email to the new parent
         await sendVerificationEmail({
             email: savedParent.email,
             firstName: savedParent.firstName,
@@ -114,6 +115,7 @@ export const verifyEmail = async (req, res) => {
             verificationTokenExpires: { $gt: Date.now() }
         });
 
+        //Mark the email as verified and remove the token and expiration date
         if (!parent) {
             return res.status(400).json("Token inválido o expirado");
         }
@@ -138,12 +140,13 @@ export const verifyEmail = async (req, res) => {
     }
 }
 
+
+//This function is used to Login a parent in the system
 export const login = async (req, res) => {
 
     const { email, password } = req.body;
 
     try {
-        console.log('Datos recibidos:', req.body);
         const parentFound = await Parent.findOne({ email });
         if (!parentFound) {
             res.status(400)
@@ -152,6 +155,7 @@ export const login = async (req, res) => {
             return res;
         }
 
+        //Find the parent by email and check if the password is correct
         if(!parentFound.isVerified) {
             res.status(400)
             console.log('El correo no ha sido verificado')
@@ -167,6 +171,7 @@ export const login = async (req, res) => {
             return res;
         }
 
+        //create a token for the parent and set it in a cookie
         const token = await createAccessToken({ id: parentFound._id })
         res.cookie("token", token)
         res.json(parentFound)
@@ -178,7 +183,7 @@ export const login = async (req, res) => {
     }
 }
 
-
+//This function is used to logout a parent from the system
 export const logout = async(req, res) => {
     const {id}=req.body
     await Parent.findByIdAndUpdate(id, { isSMSVerify: false });
@@ -188,6 +193,8 @@ export const logout = async(req, res) => {
     return res.sendStatus(200)
 }
 
+
+//This function is used to verify if the token is valid and if the parent exists in the database
 export const verifyToken = async (req, res) => {
     const { token } = req.cookies
     if (!token) {
@@ -205,6 +212,7 @@ export const verifyToken = async (req, res) => {
     })
 }
 
+// Gets the parent's details
 export const getParent = async (req, res) => {
     try {
         const parentFound = await Parent.findById(req.parent.id);

@@ -1,3 +1,6 @@
+//This function is never used in the project, but it is kept for future use if needed
+
+//this function is used to verify the pin of a parent
 export const verifyParentPin = async (req, res) => {
     try {
         const { pin } = req.body;
@@ -14,7 +17,7 @@ export const verifyParentPin = async (req, res) => {
         res.status(500).json({ message: "Error al realizar la verificación de pin", error });
     }
 }
-
+//this function is used to verify the pin of a child
 export const verifyChildPin= async (req, res) => {
     try {
         const { pin, id } = req.body;

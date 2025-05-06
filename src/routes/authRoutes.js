@@ -7,6 +7,7 @@ import { sendVerificationCode, verifyCode } from "../twilio/twilio.js";
 
 const router = Router();
 
+// Auth routes for parent
 router.post('/auth/register', registerParent);
 router.get('/auth/verify-email', verifyEmail);
 

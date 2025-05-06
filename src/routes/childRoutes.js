@@ -5,6 +5,7 @@ import { verifyChildPin } from '../controllers/verifications.js';
 
 const router = express.Router();
 
+// Child routes
 router.post('/register-child', authRequired, registerChild);
 router.get('/childrens', authRequired, getChildrensByParentId);
 

@@ -14,16 +14,18 @@ import { graphqlResolvers } from './graphql/resolver.js';
 
 const app = express();
 
+// Middleware
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
 
+// CORS configuration
 app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true,
 }))
 
-
+// GraphQL configuration
 app.use('/graphql', graphqlHTTP({
   schema: graphQLschema,
   rootValue: graphqlResolvers,
@@ -31,7 +33,7 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 
-
+// Routes
 app.use('/api', authRoutes);
 app.use('/api', childRoutes);
 app.use('/api', videoRoutes);

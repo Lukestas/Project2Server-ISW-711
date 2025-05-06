@@ -6,15 +6,21 @@ export const registerChild = async (req, res) => {
   try {
 
     const { name, avatar, pin } = req.body;
+
+    //Find the parent by id
     const parentFound = await Parent.findById(req.parent.id)
+
+    //check if all required fields are present
     if (!name || !avatar || !pin) {
       return res.status(400).json(["Todos los campos son obligatorios"]);
     }
 
+    //Validate the PIN (6 digits)
     if (pin.length !== 6 || isNaN(pin)) {
       return res.status(400).json(["El pin debe ser exactamente de 6 digitos numericos"])
-  }
+    }
 
+    // Create a new child
     const newChild = new Child({
       name,
       avatar,
@@ -22,8 +28,10 @@ export const registerChild = async (req, res) => {
       parent: parentFound.id
     })
 
+    // Save the child in the database
     const savedChild = await newChild.save();
 
+    // Add the child to the parent's list of children
     parentFound.children.push(savedChild._id);
     await parentFound.save();
 
@@ -37,7 +45,10 @@ export const registerChild = async (req, res) => {
 // Function to get all children of a parent
 export const getChildrensByParentId = async (req, res) => {
   try {
+    // Find all children linked to the parent
     const childrens = await Child.find({ parent: req.parent.id })
+    
+    // Check if there are no children
     if (!childrens || childrens.length === 0) {
       return res.status(404).json(["No se encontraron niños asociados a este padre"]);
     }

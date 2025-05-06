@@ -1,5 +1,8 @@
 import { buildSchema } from "graphql";
 
+
+// GraphQL schema definition
+// This schema defines the structure of the GraphQL API, including types, queries, and relationships between them.
 export const graphQLschema = buildSchema(
     `
     type Query{

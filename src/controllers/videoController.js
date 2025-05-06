@@ -1,6 +1,8 @@
 import Video from "../models/VideoModel.js";
 import Parent from "../models/ParentModel.js"
 
+
+//this function is used to register a video
 export const registerVideo = async (req, res) => {
     try {
         const { youtubeid, title, description, thumbnail, status } = req.body;
@@ -33,6 +35,7 @@ export const registerVideo = async (req, res) => {
     }
 }
 
+//This function is used to get all videos
 export const getAllVideo = async (req, res) => {
     try {
         const status = "enable"
@@ -45,6 +48,7 @@ export const getAllVideo = async (req, res) => {
     }
 }
 
+//This function is used to get a video by id
 export const getOneVideo = async (req, res) => {
     try {
         console.log(req.query)
@@ -60,6 +64,7 @@ export const getOneVideo = async (req, res) => {
     }
 }
 
+//This function is used to disable a video
 export const disableVideo = async (req, res) => {
     try {
         const { youtubeid } = req.body;
@@ -78,6 +83,7 @@ export const disableVideo = async (req, res) => {
     }
 }
 
+//This function is used to update a video
 export const updateVideo = async (req, res) => {
     try {
         const { youtubeid } = req.query

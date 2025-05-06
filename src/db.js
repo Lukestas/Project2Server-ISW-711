@@ -5,6 +5,7 @@ dotenv.config();
 
 const MONGOURI = process.env.MONGO_URI
 
+//Connection to MongoDB
 export const connectDB = async () => {
     try {
         await mongoose.connect(MONGOURI)

@@ -4,6 +4,7 @@ dotenv.config();
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
+//This middleware checks if the user is authenticated by verifying the JWT token
 export const authRequired = (req, res, next) => {
     const { token } = req.cookies;
     if (!token) {

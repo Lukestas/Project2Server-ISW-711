@@ -3,11 +3,13 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
-
+//
 if (!TOKEN_SECRET) {
     throw new Error("Falta la variable de entorno TOKEN_SECRET en el archivo .env")
 }
 
+//Generate a JWT token with a payload and a secret key
+//The token will expire in 1 day
 export async function createAccessToken(payload) {
     try {
         const token = await new Promise((resolve, reject) => {

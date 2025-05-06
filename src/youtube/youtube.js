@@ -5,6 +5,8 @@ dotenv.config();
 
 const apiKey = process.env.YOUTUBE_API_KEY;
 
+//This function is used to search for videos on YouTube using the YouTube Data API v3.
+// It takes a search term from the request query and returns a list of videos that match the search term.
 export const youtubeSearch = async (req, res) => {
     try {
         const { search } = req.query;

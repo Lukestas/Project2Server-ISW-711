@@ -6,6 +6,7 @@ import { youtubeSearch } from '../youtube/youtube.js';
 
 const router = express.Router();
 
+// Video routes
 router.get("/allvideos", authRequired, getAllVideo)
 
 router.post("/video", authRequired, registerVideo);

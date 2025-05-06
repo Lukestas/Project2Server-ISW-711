@@ -4,6 +4,8 @@ import { addVideoToPlaylist, assignPlaylistToChild, createPlaylist, deletePlayli
 
 const router = express.Router();
 
+
+// Playlist routes
 router.get("/allplaylist",authRequired,getAllPlaylist);
 
 router.post("/playlist",authRequired,createPlaylist);
